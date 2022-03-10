@@ -5,6 +5,8 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from users.paginator import CustomPageNumberPaginator
+
 from .filters import IngredientsFilter, RecipeFilter
 from .mixins import RetriveAndListViewSet
 from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
@@ -14,7 +16,6 @@ from .serializers import (AddRecipeSerializer, FavouriteSerializer,
                           IngredientsSerializer, ShoppingListSerializer,
                           ShowRecipeFullSerializer, TagsSerializer)
 from .utils import download_file_response
-from users.paginator import CustomPageNumberPaginator
 
 
 class IngredientsViewSet(RetriveAndListViewSet):
@@ -54,7 +55,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def delete_favorite_or_shopping_cart(request, pk, object_instance):
         recipe = get_object_or_404(Recipe, id=pk)
         try:
-            object_instance.objects.get(user=request.user, recipe=recipe).delete()
+            object_instance.objects.get(user=request.user,
+                                        recipe=recipe).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Favorite.DoesNotExist:
             return Response(
@@ -69,19 +71,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, permission_classes=[IsAuthorOrAdmin])
     def favorite(self, request, pk):
-        return self.create_favorite_or_shopping_cart(request, pk, FavouriteSerializer)
+        return self.create_favorite_or_shopping_cart(request, pk,
+                                                     FavouriteSerializer)
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
-        return self.delete_favorite_or_shopping_cart(request=request, pk=pk, object_instance=Favorite)
+        return self.delete_favorite_or_shopping_cart(request=request, pk=pk,
+                                                     object_instance=Favorite)
 
     @action(detail=True, permission_classes=[IsAuthorOrAdmin])
     def shopping_cart(self, request, pk):
-        return self.create_favorite_or_shopping_cart(request, pk, ShoppingListSerializer)
+        return self.create_favorite_or_shopping_cart(request, pk,
+                                                     ShoppingListSerializer)
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
-        return self.delete_favorite_or_shopping_cart(request=request, pk=pk, object_instance=ShoppingList)
+        return self.delete_favorite_or_shopping_cart(
+            request=request, pk=pk, object_instance=ShoppingList)
 
     @action(detail=False, permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):
