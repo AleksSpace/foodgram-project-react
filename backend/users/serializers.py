@@ -56,7 +56,7 @@ class FollowingRecipesSerializers(serializers.ModelSerializer):
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
-class FollowSerializer(serializers.ModelSerializer):
+class ShowFollowSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()

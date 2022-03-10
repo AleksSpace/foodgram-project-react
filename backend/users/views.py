@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Follow
-from .serializers import FollowSerializer, FollowSerializer
+from .serializers import FollowSerializer, ShowFollowSerializer
 from .paginator import CustomPageNumberPaginator
 
 User = get_user_model()
@@ -38,7 +38,7 @@ class FollowApiView(APIView):
 class ListFollowViewSet(generics.ListAPIView):
     queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = FollowSerializer
+    serializer_class = ShowFollowSerializer
     pagination_class = CustomPageNumberPaginator
 
     def get_queryset(self):
