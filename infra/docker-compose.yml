@@ -9,18 +9,27 @@ services:
     restart: always
 
   web:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
-    env_file:
-      - ./.env
-    volumes:
-      - static_data:/code/static/
-      - media_data:/code/media/
-      - ../backend/:/code/
+    image: alex1994zaikin/foodgram-project
     restart: always
+    volumes:
+      - static_value:/app/static/
+      - media_value:/app/media/
     depends_on:
       - db
+    env_file:
+      - ./.env
+    # build:
+    #   context: ../backend
+    #   dockerfile: Dockerfile
+    # env_file:
+    #   - ./.env
+    # volumes:
+    #   - static_data:/code/static/
+    #   - media_data:/code/media/
+    #   - ../backend/:/code/
+    # restart: always
+    # depends_on:
+    #   - db
 
   frontend:
     build:

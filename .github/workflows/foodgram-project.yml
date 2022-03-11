@@ -56,8 +56,6 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo docker pull alex1994zaikin/foodgram-project:latest
-            cd foodgram-project/infra
             sudo docker-compose stop
             sudo docker-compose rm web
             touch .env
