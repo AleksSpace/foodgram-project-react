@@ -65,9 +65,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
+        # if self.request.method == 'GET':
+        #     return ShowRecipeFullSerializer
+        # return AddRecipeSerializer
+
+        if self.request.method == "POST" or self.request.method == "PATCH":
+            return AddRecipeSerializer
+        if self.request.method == "GET":
             return ShowRecipeFullSerializer
-        return AddRecipeSerializer
 
     @action(detail=True, permission_classes=[IsAuthorOrAdmin])
     def favorite(self, request, pk):
