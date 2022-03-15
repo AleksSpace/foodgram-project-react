@@ -4,7 +4,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
 from users.paginator import CustomPageNumberPaginator
 
 from .filters import IngredientsFilter, RecipeFilter
@@ -85,7 +84,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             favorite = Favorite.objects.create(user=user, recipe=recipe)
-            serializer = FavouriteSerializer(favorite, context={"request": request})
+            serializer = FavouriteSerializer(favorite,
+                                             context={"request": request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == "DELETE":
@@ -110,14 +110,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     {"error": "This recipe already in shopping cart"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            shoping_cart = ShoppingList.objects.create(user=user, recipe=recipe)
+            shoping_cart = ShoppingList.objects.create(user=user,
+                                                       recipe=recipe)
             serializer = ShoppingListSerializer(
                 shoping_cart, context={"request": request}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == "DELETE":
-            delete_shoping_cart = ShoppingList.objects.filter(user=user, recipe=recipe)
+            delete_shoping_cart = ShoppingList.objects.filter(user=user,
+                                                              recipe=recipe)
             if delete_shoping_cart.exists():
                 delete_shoping_cart.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
@@ -143,7 +145,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     #     return self.delete_favorite_or_shopping_cart(
     #         request=request, pk=pk, object_instance=ShoppingList)
 
-    @action(detail=False, methods=["GET"], permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=["GET"],
+            permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):
         ingredients_list = RecipeIngredient.objects.filter(
             recipe__shopping_cart__user=request.user
