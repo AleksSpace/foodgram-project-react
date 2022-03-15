@@ -71,21 +71,15 @@ class ShowFollowSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
     def get_is_subscribed(self, obj):
-        request = self.context.get('request')
-        if not request or request.user.is_anonymous:
+        user = self.context.get("request").user
+        if user.is_anonymous:
             return False
-        return obj.follower.filter(user=obj, author=request.user).exists()
+        return Follow.objects.filter(user=user, following=obj.id).exists()
 
     def get_recipes(self, obj):
-        request = self.context.get('request')
-        recipes_limit = request.query_params.get('recipes_limit')
-        if recipes_limit is not None:
-            recipes = obj.recipes.all()[:(int(recipes_limit))]
-        else:
-            recipes = obj.recipes.all()
-        context = {'request': request}
-        return FollowingRecipesSerializers(recipes, many=True,
-                                           context=context).data
+        recipes = Recipe.objects.filter(author=obj.user)
+        serializer = FollowingRecipesSerializers(recipes, many=True)
+        return serializer.data
 
     def get_recipes_count(self, obj):
-        return obj.recipes.count()
+        return Recipe.objects.filter(author=obj.id).count()

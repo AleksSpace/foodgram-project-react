@@ -54,7 +54,7 @@ class FollowApiView(APIView):
 
 
 class ListFollowViewSet(generics.ListAPIView):
-    queryset = User.objects.all()
+    queryset = Follow.objects.all()
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ShowFollowSerializer
     pagination_class = CustomPageNumberPaginator
