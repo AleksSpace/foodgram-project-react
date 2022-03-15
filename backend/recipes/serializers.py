@@ -107,20 +107,12 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                   'name', 'image', 'text', 'cooking_time')
 
     def validate_ingredients(self, data):
-        ingredients = data.get('ingredients')
+        ingredients = self.initial_data.get('ingredients')
         if not ingredients:
-            raise ValidationError('Не выбрано ни одного ингредиента!')
-        ingredients_ids = [ingredient['id'] for ingredient in ingredients]
-        if len(ingredients) != len(set(ingredients_ids)):
-            raise serializers.ValidationError('Вы не можете добавить один '
-                                              'ингредиент дважды')
+            raise ValidationError('Нужно выбрать минимум 1 ингридиент!')
         for ingredient in ingredients:
             if int(ingredient['amount']) <= 0:
                 raise ValidationError('Количество должно быть положительным!')
-            pk = int(ingredient['id'])
-            if pk < 0:
-                raise ValidationError('id элемента не может быть '
-                                      'отрицательным')
         return data
 
     def validate_tags(self, data):
