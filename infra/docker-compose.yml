@@ -12,7 +12,7 @@ services:
     image: alex1994zaikin/foodgram-project
     restart: always
     volumes:
-      - static_data:/code/static_backend/
+      - static_backend_value:/code/static_backend/
       - media_data:/code/media/
     depends_on:
       - db
