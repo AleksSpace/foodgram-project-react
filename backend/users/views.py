@@ -21,6 +21,23 @@ class FollowApiView(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def post(self, request, pk):
+        user = request.user
+        following = get_object_or_404(User, id=pk)
+        if user == following:
+            return Response(
+                {"error": "Вы не можете подписаться на себя"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if Follow.objects.filter(user=user, following=following).exists():
+            return Response(
+                {"error": "Вы уже подписаны на этого пользователя"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        create_follow = Follow.objects.create(user=user, following=following)
+        serializer = ShowFollowSerializer(create_follow, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     def delete(self, request, id):
         user = request.user
         author = get_object_or_404(User, id=id)
