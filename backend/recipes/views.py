@@ -71,6 +71,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if self.request.method == "POST" or self.request.method == "PATCH":
             return AddRecipeSerializer
+
         if self.request.method == "GET":
             return ShowRecipeFullSerializer
 
