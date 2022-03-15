@@ -45,6 +45,6 @@ services:
       - frontend
 
 volumes:
-  static_data:
+  static_backend_value:
   media_data:
   postgresql_data:
