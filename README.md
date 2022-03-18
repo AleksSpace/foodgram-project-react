@@ -49,3 +49,9 @@ docker-compose exec backend python manage.py collectstatic --no-input
 docker-compose exec web python manage.py loaddata fixtures/ingredients.json
 ```
 ***
+## Проект доступен по ссылке :
+http://51.250.27.112/
+
+http://51.250.27.112/admin/
+
+login - admin@admin.ru, pass - admin
