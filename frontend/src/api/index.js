@@ -305,7 +305,7 @@ class Api {
     return fetch(
       `/api/users/${author_id}/subscribe/`,
       {
-        method: 'POST',
+        method: 'GET',
         headers: {
           ...this._headers,
           'authorization': `Token ${token}`

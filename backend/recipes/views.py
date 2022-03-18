@@ -41,28 +41,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
     pagination_class = CustomPageNumberPaginator
 
-    # @staticmethod
-    # def create_favorite_or_shopping_cart(request, pk, serializer_instance):
-    #     data = {'user': request.user.id, 'recipe': pk}
-    #     serializer = serializer_instance(data=data,
-    #                                      context={'request': request})
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    # @staticmethod
-    # def delete_favorite_or_shopping_cart(request, pk, object_instance):
-    #     recipe = get_object_or_404(Recipe, id=pk)
-    #     try:
-    #         object_instance.objects.get(user=request.user,
-    #                                     recipe=recipe).delete()
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
-    #     except Favorite.DoesNotExist:
-    #         return Response(
-    #             'Нет данного рецепта',
-    #             status=status.HTTP_400_BAD_REQUEST,
-    #         )
-
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ShowRecipeFullSerializer
@@ -107,7 +85,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == "POST":
             if ShoppingList.objects.filter(user=user, recipe=recipe).exists():
                 return Response(
-                    {"error": "This recipe already in shopping cart"},
+                    {"error": "Этот рецепт уже в корзине покупок"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             shoping_cart = ShoppingList.objects.create(user=user,
@@ -124,26 +102,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 delete_shoping_cart.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    # @action(detail=True, permission_classes=[IsAuthorOrAdmin])
-    # def favorite(self, request, pk):
-    #     return self.create_favorite_or_shopping_cart(request, pk,
-    #                                                  FavouriteSerializer)
-
-    # @favorite.mapping.delete
-    # def delete_favorite(self, request, pk):
-    #     return self.delete_favorite_or_shopping_cart(request=request, pk=pk,
-    #                                                  object_instance=Favorite)
-
-    # @action(detail=True, permission_classes=[IsAuthorOrAdmin])
-    # def shopping_cart(self, request, pk):
-    #     return self.create_favorite_or_shopping_cart(request, pk,
-    #                                                  ShoppingListSerializer)
-
-    # @shopping_cart.mapping.delete
-    # def delete_shopping_cart(self, request, pk):
-    #     return self.delete_favorite_or_shopping_cart(
-    #         request=request, pk=pk, object_instance=ShoppingList)
 
     @action(detail=False, methods=["GET"],
             permission_classes=[permissions.IsAuthenticated])

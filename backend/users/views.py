@@ -16,34 +16,18 @@ class FollowApiView(APIView):
 
     def get(self, request, id):
         data = {'user': request.user.id, 'author': id}
-        serializer = FollowSerializer(data=data, context={'request': request})
+        serializer = FollowSerializer(data=data,
+                                      context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def post(self, request, pk):
-        user = request.user
-        following = get_object_or_404(User, id=pk)
-        if user == following:
-            return Response(
-                {"error": "Вы не можете подписаться на себя"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        if Follow.objects.filter(user=user, following=following).exists():
-            return Response(
-                {"error": "Вы уже подписаны на этого пользователя"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        create_follow = Follow.objects.create(user=user, following=following)
-        serializer = ShowFollowSerializer(create_follow,
-                                          context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, id):
         user = request.user
         author = get_object_or_404(User, id=id)
         try:
-            subscription = Follow.objects.get(user=user, author=author)
+            subscription = get_object_or_404(Follow, user=user,
+                                             author=author)
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Follow.DoesNotExist:
@@ -54,7 +38,7 @@ class FollowApiView(APIView):
 
 
 class ListFollowViewSet(generics.ListAPIView):
-    queryset = Follow.objects.all()
+    queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = ShowFollowSerializer
     pagination_class = CustomPageNumberPaginator

@@ -10,6 +10,9 @@ services:
 
   web:
     image: alex1994zaikin/foodgram-project
+    # build:
+    #   context: ../backend
+    #   dockerfile: Dockerfile
     restart: always
     volumes:
       - static_backend_value:/code/static_backend/
@@ -21,6 +24,9 @@ services:
 
   frontend:
     image: alex1994zaikin/foodgram-frontend
+    # build:
+    #   context: ../frontend
+    #   dockerfile: Dockerfile
     restart: always
     volumes:
       - ../frontend/:/app/result_build/

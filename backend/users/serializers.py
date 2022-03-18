@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipes.models import Recipe
 from rest_framework import serializers
@@ -39,7 +40,7 @@ class FollowSerializer(serializers.ModelSerializer):
         fields = ('user', 'author')
 
     def validate(self, data):
-        user = self.context.get('request').user
+        user = self.context['request'].user
         author_id = data['author'].id
         if Follow.objects.filter(user=user, author__id=author_id).exists():
             raise serializers.ValidationError(
@@ -70,15 +71,19 @@ class ShowFollowSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
     def get_is_subscribed(self, obj):
-        user = self.context.get("request").user
-        if user.is_anonymous:
+        if not self.context['request'].user.is_authenticated:
             return False
-        return Follow.objects.filter(user=user, following=obj.id).exists()
+        return Follow.objects.filter(
+            author=obj, user=self.context['request'].user).exists()
 
     def get_recipes(self, obj):
-        recipes = Recipe.objects.filter(author=obj.user)
-        serializer = FollowingRecipesSerializers(recipes, many=True)
-        return serializer.data
+        recipes_limit = int(self.context['request'].GET.get(
+            'recipes_limit', 10))
+        user = get_object_or_404(User, pk=obj.pk)
+        recipes = Recipe.objects.filter(author=user)[:recipes_limit]
+
+        return FollowingRecipesSerializers(recipes, many=True).data
 
     def get_recipes_count(self, obj):
-        return Recipe.objects.filter(author=obj.id).count()
+        user = get_object_or_404(User, pk=obj.pk)
+        return Recipe.objects.filter(author=user).count()
