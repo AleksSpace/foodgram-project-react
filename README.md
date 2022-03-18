@@ -9,43 +9,43 @@
 [![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.yandex.ru/)
 # foodgram-project-react
-Application "Product Assistant": a site, on applications you can publish recipes, add other people's recipes to your favorites and subscribe to publications of other authors. The Shopping List service allows users to create a list of products that are needed to prepare selected dishes.
+Приложение "Продуктовый помощник": сайт, на котором вы можете публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис Списка покупок позволяет пользователям создавать список продуктов, необходимых для приготовления выбранных блюд.
 
-# Run the project
-## Clone repository to your computer
+# Запуск проекта
+## Клонируйте репозиторий на свой компьютер
 ```
-HTTPS - https://github.com/DmitryTok/foodgram-project-react.git
-SSH - git@github.com:DmitryTok/foodgram-project-react.git
-GitHub CLI - gh repo clone DmitryTok/foodgram-project-react
+HTTPS - https://github.com/AleksSpace/foodgram-project-react.git
+SSH - git@github.com:AleksSpace/foodgram-project-react.git
+GitHub CLI - gh repo clone AleksSpace/foodgram-project-react
 ```
-## Create and feel the .env file
+## Создайте и заполните файл .env
 ```
-DB_ENGINE=<...> # specify that we work with postgresql data base
-DB_NAME=<...> # data base name
-POSTGRES_USER=<...> # login for connecting to data base
-POSTGRES_PASSWORD=<...> # password for connection to data base (create your own)
-DB_HOST=<...> # name of the servise (container)
-DB_PORT=<...> # port for conection to data base
-SECRET_KEY=<...> # kay from settings.py
+DB_ENGINE=<...> # укажите, что мы работаем с базой данных postgresql
+DB_NAME=<...> # имя базы данных
+POSTGRES_USER=<...> # логин для подключения к базе данных
+POSTGRES_PASSWORD=<...> # пароль для подключения к базе данных (создайте свой собственный)
+DB_HOST=<...> # название хоста (контейнера)
+DB_PORT=<...> # порт для подключения к базе данных
+SECRET_KEY=<...> # ключ от settings.py
 ```
-## 1.Assembly and run the container from "infra" folder
+## 1.Сборка и запуск контейнера из папки "infra"
 ```
 docker-compose up -d --build
 ```
-## 2.Make migrations
+## 2.Совершайте миграции
 ```
 docker-compose exec backend python manage.py migrate
 ```
-## 3.Create a Django superuser
+## 3.Создайте суперпользователя Django
 ```
 docker-compose exec backend python manage.py createsuperuser
 ```
-## 4.Collect static
+## 4.Соберите статику
 ```
 docker-compose exec backend python manage.py collectstatic --no-input
 ```
-## 5.Load data to database
+## 5.Загрузка данных в базу данных
 ```
-docker-compose exec backend python manage.py loaddata fixtures/ingredients.json
+docker-compose exec web python manage.py loaddata data/ingredients.json
 ```
 ***
