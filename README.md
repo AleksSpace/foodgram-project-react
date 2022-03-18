@@ -46,6 +46,6 @@ docker-compose exec backend python manage.py collectstatic --no-input
 ```
 ## 5.Загрузка данных в базу данных
 ```
-docker-compose exec web python manage.py loaddata data/ingredients.json
+docker-compose exec web python manage.py loaddata fixtures/ingredients.json
 ```
 ***
