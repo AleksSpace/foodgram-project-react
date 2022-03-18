@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from .models import Follow
 from .paginator import CustomPageNumberPaginator
-from .serializers import FollowSerializer, ShowFollowSerializer
+from .serializers import ShowFollowSerializer
 
 User = get_user_model()
 
@@ -14,12 +14,27 @@ User = get_user_model()
 class FollowApiView(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
 
-    def get(self, request, id):
-        data = {'user': request.user.id, 'author': id}
-        serializer = FollowSerializer(data=data,
-                                      context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+    def post(self, request, *args, **kwargs):
+        pk = kwargs.get('id', None)
+        author = get_object_or_404(User, pk=pk)
+        user = request.user
+
+        if author == user:
+            return Response(
+                {'errors': 'Вы не можете подписываться на себя'},
+                status=status.HTTP_400_BAD_REQUEST)
+
+        if Follow.objects.filter(author=author, user=user).exists():
+            return Response(
+                {'errors': 'Вы уже подписаны на этого пользователя'},
+                status=status.HTTP_400_BAD_REQUEST)
+
+        obj = Follow(author=author, user=user)
+        obj.save()
+
+        serializer = ShowFollowSerializer(
+            author, context={'request': request})
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, id):
