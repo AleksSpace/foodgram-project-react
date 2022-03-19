@@ -50,7 +50,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         detail=True,
         methods=["POST", "DELETE"],
         url_path="favorite",
-        permission_classes=[permissions.IsAuthenticated],
+        permission_classes=[IsAuthorOrAdmin],
     )
     def favorite(self, request, pk=None):
         user = request.user
@@ -58,7 +58,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == "POST":
             if Favorite.objects.filter(user=user, recipe=recipe).exists():
                 return Response(
-                    {"error": "This recipe already in favorite"},
+                    {"error": "Этот рецепт уже в избранном"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             favorite = Favorite.objects.create(user=user, recipe=recipe)
@@ -77,7 +77,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         detail=True,
         methods=["POST", "DELETE"],
         url_path="shopping_cart",
-        permission_classes=[permissions.IsAuthenticated],
+        permission_classes=[IsAuthorOrAdmin],
     )
     def shopping_cart(self, request, pk=None):
         user = request.user

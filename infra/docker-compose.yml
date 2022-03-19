@@ -21,7 +21,6 @@ services:
 
   frontend:
     image: alex1994zaikin/foodgram-frontend
-    restart: always
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:

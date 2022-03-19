@@ -105,27 +105,34 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         fields = ('id', 'tags', 'author', 'ingredients',
                   'name', 'image', 'text', 'cooking_time')
 
-    def validate_ingredients(self, data):
-        ingredients = self.initial_data.get('ingredients')
-        if not ingredients:
-            raise ValidationError('Нужно выбрать минимум 1 ингридиент!')
-        for ingredient in ingredients:
-            if int(ingredient['amount']) <= 0:
-                raise ValidationError('Количество должно быть положительным!')
-        return data
+    def validate_ingredients(self, value):
+        ingredients_set = []
+        for ingredient in value:
+            if ingredient['id'] in ingredients_set:
+                raise serializers.ValidationError(
+                    'Каждый ингредиент может быть упомянут только один раз'
+                )
+            elif ingredient['amount'] < 1:
+                raise serializers.ValidationError(
+                    'Количество ингредиентов должно быть целым'
+                    ' положительным числом'
+                )
+            else:
+                ingredients_set.append(ingredient['id'])
+        return value
 
-    def validate_tags(self, data):
-        if not data:
-            raise ValidationError('Необходимо отметить хотя бы один тег')
-        if len(data) != len(set(data)):
-            raise ValidationError('Один тег указан дважды')
-        return data
+    def validate_tags(self, value):
+        if len(value) != len(set(value)):
+            raise serializers.ValidationError(
+                'Каждый тег может быть упомянут только один раз'
+            )
+        return value
 
-    def validate_cooking_time(self, data):
-        if data <= 0:
+    def validate_cooking_time(self, value):
+        if value <= 0:
             raise ValidationError('Время готовки должно быть положительным'
-                                  'числом, не менее 1 минуты!')
-        return data
+                                  ' числом, не менее 1 минуты!')
+        return value
 
     def add_recipe_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
