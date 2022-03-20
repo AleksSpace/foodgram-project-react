@@ -1,14 +1,33 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 
 from .models import Follow
 from .paginator import CustomPaginator
-from .serializers import ShowFollowSerializer
+from .serializers import CustomUserSerializer, ShowFollowSerializer
+from rest_framework.permissions import (
+    AllowAny, IsAuthenticated
+)
 
 User = get_user_model()
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [AllowAny, ]
+
+    @action(
+        detail=False,
+        methods=['get'],
+        permission_classes=(IsAuthenticated, )
+    )
+    def me(self, request):
+        serializer = self.get_serializer(self.request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class FollowApiView(APIView):
