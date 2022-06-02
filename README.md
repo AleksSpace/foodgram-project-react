@@ -87,6 +87,7 @@ DB_PASSWORD=<...> # пароль для подключения к базе да�
 DB_HOST=<...> # название хоста (контейнера)
 DB_PORT=<...> # порт для подключения к базе данных
 ' > .env
+
 ### Сборка контейенеров
 Соберите контейнеры и запустите их
 ```
@@ -101,13 +102,15 @@ docker compose exec backend python manage.py importingredients ingredients.json
 docker compose exec backend rm ingredients.json
 ```
 ## Проект будет доступен по ссылке:
-`API - http://localhost/`
+```
+API - http://localhost/
 
-`Redoc - http://localhost/api/docs/`
+Redoc - http://localhost/api/docs/
 
-`Frontend - http://localhost/`
+Frontend - http://localhost/
 
-`Админка - http://localhost/admin/`
+Админка - http://localhost/admin/
+```
 
 ## Deploy на сервер
 При пуше в ветку master выполняется автоматическое разворачивание проекта на сервере (после всех тестов)
