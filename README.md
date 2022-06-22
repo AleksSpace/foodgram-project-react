@@ -56,32 +56,22 @@ DB_PORT=<...> # порт для подключения к базе данных
 ' > .env
 ```
 ## Запуск проекта
-#### Перейдите в папку infra и редактируйте файл docker-compose так:
-```
-web:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
-    restart: always
-    volumes:
-      - static_backend_value:/code/static_backend/
-      - media_data:/code/media/
-    depends_on:
-      - db
-    env_file:
-      - ./.env
-```
+
 #### Перейдите в папку backend и выполните команды
 ```
 python manage.py migrate - Выполнение миграций
+```
+```
 python manage.py createsuperuser - Создание суперпользователя
-python manage.py importingredients ingredients.json - Загрузка тестовой БД
+```
+python manage.py loaddata fixtures/ingredients.json - Загрузка тестовой БД
+```
+```
 python manage.py runserver localhost:8080 - Запуск Dev-сервера
 ```
 ***
 ## Проект будет доступен по ссылке:
 http://localhost/
-
 http://localhost/admin/
 
 ## Запуск проекта в контейнерах Docker
