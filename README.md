@@ -14,19 +14,31 @@
 # Запуск проекта
 ## Запуск проекта в dev-режиме без Docker
 ### Клонируйте репозиторий на свой компьютер
+### HTTPS
 ```
-HTTPS - git clone https://github.com/AleksSpace/foodgram-project-react.git
-SSH - git clone git@github.com:AleksSpace/foodgram-project-react.git
-GitHub CLI - git clone gh repo clone AleksSpace/foodgram-project-react
+git clone https://github.com/AleksSpace/foodgram-project-react.git
+```
+### SSH
+```
+git clone git@github.com:AleksSpace/foodgram-project-react.git
+```
+### GitHub CLI
+```
+git clone gh repo clone AleksSpace/foodgram-project-react
 ```
 ### Создайте и активируйте виртуальное окружение
 ```
 python -m venv venv
+```
+```
 . venv/Scripts/activate
 ```
-### Обновите pip и установите зависимостси
+### Обновите pip
 ```
 python -m pip install --upgrade pip
+```
+### Перейдите в папку с файлом requirements.txt и установите зависимостси
+```
 pip install -r requirements.txt
 ```
 ## Создайте файл .env
