@@ -14,15 +14,15 @@
 # Запуск проекта
 ## Запуск проекта в dev-режиме без Docker
 ### Клонируйте репозиторий на свой компьютер
-### HTTPS
+#### HTTPS
 ```
 git clone https://github.com/AleksSpace/foodgram-project-react.git
 ```
-### SSH
+#### SSH
 ```
 git clone git@github.com:AleksSpace/foodgram-project-react.git
 ```
-### GitHub CLI
+#### GitHub CLI
 ```
 git clone gh repo clone AleksSpace/foodgram-project-react
 ```
