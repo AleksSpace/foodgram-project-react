@@ -49,8 +49,8 @@ ALLOWED_HOSTS=*
 DEBUG=1
 DB_ENGINE=django.db.backends.postgresql # укажите, с какой БД вы работаете
 DB_NAME=postgres # имя базы данных
-DB_USER=<...> # логин для подключения к базе данных
-DB_PASSWORD=<...> # пароль для подключения к базе данных (создайте свой собственный)
+POSTGRES_USER=<...> # логин для подключения к базе данных
+POSTGRES_PASSWORD=<...> # пароль для подключения к базе данных (создайте свой собственный)
 DB_HOST=<...> # название хоста (контейнера)
 DB_PORT=<...> # порт для подключения к базе данных
 ' > .env
@@ -77,10 +77,17 @@ http://localhost/admin/
 ***
 ## Запуск проекта в контейнерах Docker
 ### Клонируйте репозиторий на свой компьютер
+#### HTTPS
 ```
-HTTPS - git clone https://github.com/AleksSpace/foodgram-project-react.git
-SSH - git clone git@github.com:AleksSpace/foodgram-project-react.git
-GitHub CLI - git clone gh repo clone AleksSpace/foodgram-project-react
+git clone https://github.com/AleksSpace/foodgram-project-react.git
+```
+#### SSH
+```
+git clone git@github.com:AleksSpace/foodgram-project-react.git
+```
+#### GitHub CLI
+```
+git clone gh repo clone AleksSpace/foodgram-project-react
 ```
 ### Создайте и активируйте виртуальное окружение
 ```
@@ -89,40 +96,102 @@ python -m venv venv
 ```
 ### Обновите pip и установите зависимостси
 ```
+python -m venv venv
+```
+```
+. venv/Scripts/activate
+```
+### Обновите pip
+```
 python -m pip install --upgrade pip
+```
+### Перейдите (команда cd ...) в папку с файлом requirements.txt и установите зависимостси
+```
 pip install -r requirements.txt
 ```
 ## Создайте файл .env
 На production обязательно заменить значение SECRET_KEY
-С помощью команды ниже в папке будет создан .env-файл
+С помощью команды cd перейдите в папку infra и введите команду для создания .env-файла
 ```
 echo 'SECRET_KEY=some-secret-key
 ALLOWED_HOSTS=*
 DEBUG=1
 DB_ENGINE=django.db.backends.postgresql # укажите, с какой базой данных вы работаете
 DB_NAME=postgres # имя базы данных
-DB_USER=<...> # логин для подключения к базе данных
-DB_PASSWORD=<...> # пароль для подключения к базе данных (создайте свой собственный)
+POSTGRES_USER=<...> # логин для подключения к базе данных
+POSTGRES_PASSWORD=<...> # пароль для подключения к базе данных (создайте свой собственный)
 DB_HOST=<...> # название хоста (контейнера)
 DB_PORT=<...> # порт для подключения к базе данных
 ' > .env
 ```
-
+## Сборка и запуск контейнеров локально на своем ПК.
+Для этого вам понадобится установить приложение [Docker](https://www.docker.com/products/docker-desktop/) на свой ПК.
+#### Для локального запуска необходимо отредактировать файл docker-compose.yml
+Перейдите в папку infra и отредактируйте файл, в разделе web:
+```
+web:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - static_backend_value:/code/static_backend/
+      - media_data:/code/media/
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+```
+в разделе frontend:
+```
+frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - web
+```
+#### Для запуска из DockerHub необходимо в файле docker-compose.yml указать имя пользователя и название репозитория
+Перейдите в папку infra и отредактируйте файл, в разделе web:
+```
+web:
+    image: <Имя пользователя>/<Название репозитория>
+    restart: always
+    volumes:
+      - static_backend_value:/code/static_backend/
+      - media_data:/code/media/
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+```
+в разделе frontend:
+```
+frontend:
+    image: <Имя пользователя>/<Название репозитория>
+    volumes:
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - web
+```
 ### Сборка контейенеров
-Соберите контейнеры и запустите их
+Перейдите в папку infra и запустите команду в терминале
 
 ```
 docker compose up -d
-docker compose exec backend python manage.py createsuperuser
+```
+#### Создайте суперпользователя
+```
+docker compose exec web python manage.py createsuperuser
 ```
 
 ### Заполнение базы данных
 Заполните БД подготовленными данными при первом запуске
 
-```
-docker compose cp ../data/ingredients.json backend:/app/ingredients.json 
-docker compose exec backend python manage.py importingredients ingredients.json
-docker compose exec backend rm ingredients.json
+``` 
+docker compose exec web python manage.py loaddata fixtures/ingredients.json
 ```
 ***
 ## Проект будет доступен по ссылке:
