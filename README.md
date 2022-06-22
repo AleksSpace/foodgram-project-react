@@ -195,15 +195,13 @@ docker compose exec web python manage.py loaddata fixtures/ingredients.json
 ```
 ***
 ## Проект будет доступен по ссылке:
-```
+
 API - http://localhost/
 
 Redoc - http://localhost/api/docs/
 
-Frontend - http://localhost/
-
 Админка - http://localhost/admin/
-```
+
 
 ## Deploy на сервер
 При пуше в ветку master выполняется автоматическое разворачивание проекта на сервере (после всех тестов)
