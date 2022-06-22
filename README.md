@@ -47,8 +47,8 @@ pip install -r requirements.txt
 echo 'SECRET_KEY=some-secret-key
 ALLOWED_HOSTS=*
 DEBUG=1
-DB_ENGINE=django.db.backends.sqlite3 # укажите, что мы работаем с базой данных postgresql
-DB_NAME=db.sqlite3 # имя базы данных
+DB_ENGINE=django.db.backends.postgresql # укажите, с какой БД вы работаете
+DB_NAME=postgres # имя базы данных
 DB_USER=<...> # логин для подключения к базе данных
 DB_PASSWORD=<...> # пароль для подключения к базе данных (создайте свой собственный)
 DB_HOST=<...> # название хоста (контейнера)
