@@ -64,6 +64,7 @@ python manage.py migrate - Выполнение миграций
 ```
 python manage.py createsuperuser - Создание суперпользователя
 ```
+```
 python manage.py loaddata fixtures/ingredients.json - Загрузка тестовой БД
 ```
 ```
