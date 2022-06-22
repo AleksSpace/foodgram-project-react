@@ -37,12 +37,12 @@ python -m venv venv
 ```
 python -m pip install --upgrade pip
 ```
-### Перейдите в папку с файлом requirements.txt и установите зависимостси
+### Перейдите (команда cd ...) в папку с файлом requirements.txt и установите зависимостси
 ```
 pip install -r requirements.txt
 ```
 ## Создайте файл .env
-С помощью команды ниже в папке будет создан .env-файл
+С помощью команды cd перейдите в папку infra и введите команду для создания .env-файла
 ```
 echo 'SECRET_KEY=some-secret-key
 ALLOWED_HOSTS=*
