@@ -72,9 +72,9 @@ python manage.py runserver localhost:8080 - Запуск Dev-сервера
 ```
 ***
 ## Проект будет доступен по ссылке:
-```http://localhost/
+http://localhost/
 
-```http://localhost/admin/
+http://localhost/admin/
 
 ## Запуск проекта в контейнерах Docker
 ### Клонируйте репозиторий на свой компьютер
